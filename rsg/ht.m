@@ -1,0 +1,24 @@
+close all;clear all;clc;
+nt=1030;
+nr=1;
+dt=0.0002;
+t=0:dt:(nt-1)*dt;
+fid=fopen('seistxx.dat','rb');
+seistxx=fread(fid,[nt,nr],'real*4');
+ffttxx=fft(seistxx);
+[tmax,ntmax]=min(seistxx);
+fclose(fid);
+fid=fopen('wlet.dat','rb');
+wlet=fread(fid,[nt,nr],'real*4');
+fftwlet=fft(wlet);
+[wmin,nwmin]=max(wlet);
+fclose(fid);
+subplot(2,1,1);
+plot(t,seistxx,'r',t,wlet,'b');
+subplot(2,1,2);
+df=1/(dt*nt);
+f=0:df:(nt-1)*df;
+plot(f,abs(ffttxx),'r',f,abs(fftwlet),'b');
+[maxt,ntxx]=max(ffttxx(2:515))
+[maxw,nw]=max(fftwlet(2:515))
+v=(410-404)/((ntmax-nwmin)*dt);
